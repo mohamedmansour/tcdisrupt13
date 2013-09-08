@@ -130,6 +130,8 @@ function displayRouteNumber(event) {
 			totalTime = event.route[0].routeLegs[0].summary.timeWithTraffic + remainingTime;
 			
 			console.log("Time remaining: " + remainingTime);
+			
+			$("#headerBar")[0].innerText = Math.round(remainingTime/60) + "min " + Math.round(remainingTime)%60 + "sec remaining"; appDeactivate();
 			console.log("Percent done: " + Math.round((1-remainingTime/totalTime)*1000)/10 + "%");
 		}
 	}
@@ -251,7 +253,7 @@ function geoCode(locationString, callback) {
 			callback(geoCodeResultTo.latitude, geoCodeResultTo.longitude);
 		}
 	};
-			
+	
 	searchManager.geocode(geocodeRequest);
 }
 
