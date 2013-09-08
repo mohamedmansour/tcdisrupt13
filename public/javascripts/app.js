@@ -65,9 +65,11 @@ var boundingBoxesCache = {};
 
 
 
-function createDrivingRoute(fromLat, fromLng, toLat, toLng, autoUpdateMapView) {
+function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 	"use strict";
 
+	var waypoint;
+	
 	if (autoUpdateMapView === undefined) autoUpdateMapView = true;
 
 	var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
@@ -77,11 +79,22 @@ function createDrivingRoute(fromLat, fromLng, toLat, toLng, autoUpdateMapView) {
 	directionsManager.resetDirections();
 	directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
 
-	var start = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(fromLat, fromLng)});
-	var stop = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(toLat, toLng)});
+	if (carLocation.startLat !== undefined) {
+		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.startLat, carLocation.startLng)});
+		directionsManager.addWaypoint(waypoint);
+	}
 
-	directionsManager.addWaypoint(start);
-	directionsManager.addWaypoint(stop);
+	
+	if (carLocation.lat !== undefined) {
+		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.lat, carLocation.lng)});
+		directionsManager.addWaypoint(waypoint);
+	}
+
+	
+	if (phoneLocation.lat !== undefined) {
+		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(phoneLocation.lat, phoneLocation.lng)});
+		directionsManager.addWaypoint(waypoint);
+	}
 
 	directionsManager.calculateDirections();
 }
@@ -174,23 +187,15 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation, redrawMap){
 		};
 		
 		var carAndPhoneAreGeolocatedCallback = function() {
-			var fromLat, fromLng, toLat, toLng;
-			
-			fromLat = carLocation.lat || phoneLocation.lat;
-			fromLng = carLocation.lng || phoneLocation.lng;
-			
-			toLat = phoneLocation.lat || carLocation.lat;
-			toLng = phoneLocation.lng || carLocation.lng;
-		
 			if (redrawMap) {
 				//map.setView({ bounds: Microsoft.Maps.LocationRect.fromLocations (new Microsoft.Maps.Location(toLat, toLng), new Microsoft.Maps.Location(fromLat, fromLng))});		
 
 				map.entities.clear(); 
-				createDrivingRoute(fromLat, fromLng, toLat, toLng);
+				createDrivingRoute(carLocation, phoneLocation);
 						
 				//urlState.from = from;
 				//urlState.q = to;
-				urlState.wp = [fromLat, fromLng, toLat, toLng];
+				urlState.wp = [carLocation.lat, carLocation.lng, phoneLocation.lat, phoneLocation.lng];
 
 				_gaq.push(['_trackEvent', 'Map', 'DirectionSearch', getUrl()]);
 			}
@@ -232,7 +237,7 @@ var getCarLocationTimer;
 function getCarLocation() {
 	"use strict";
 	
-	var redrawMap = false, jsonUrl = "/api/get?id=abc123";
+	var redrawMap = false, jsonUrl = "/api/get?id=" + (urlState.id || "abc123");
 	
 	if (lastPhoneLocation && lastPhoneLocation.lat !== undefined && lastPhoneLocation.lng !== undefined) {
 		jsonUrl += ("&lat=" + lastPhoneLocation.lat + "&lng=" + lastPhoneLocation.lng);
@@ -243,7 +248,7 @@ function getCarLocation() {
 		success: function (data, text) {
 			var carLocation
 			if (data && data.status) {
-				carLocation = {name:"Car Location", locationString:null, lat:data.lat, lng:data.lng};
+				carLocation = {name:"Car Location", locationString:null, lat:data.lat, lng:data.lng, startLat:data.startLat, startLng:data.startLng};
 				if (JSON.stringify(lastCarLocation) !== JSON.stringify(carLocation)) {
 					lastCarLocation = carLocation;
 					redrawMap = true;
