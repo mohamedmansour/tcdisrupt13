@@ -1,0 +1,16 @@
+header {
+	position: absolute;
+	width: 100%;
+}
+
+.logoutButton {
+	margin-right: 10px;
+}
+
+.accountButton img {
+	vertical-align: middle;
+	padding-right: 4px;
+}
+.loggedIn {
+	padding: 9px 20px 8px 15px
+}
