@@ -31,6 +31,10 @@ exports.attach = function(app) {
 				lng: lng
 			};
 		}
+		else {
+			idVal.lat = ids[id].lat = lat;
+			idVal.lng = ids[id].lng = lng;
+		}
 		
 		res.send({
 			status: true,
@@ -94,8 +98,6 @@ exports.attach = function(app) {
 			ids[id].phoneLat = phoneLat;
 		}
 
-		console.log(ids);
-		
 		res.send({
 			status: true,
 			lat: idData.lat,
