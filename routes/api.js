@@ -1,23 +1,28 @@
 exports.attach = function(app) {
-	var vins = {};
+	var ids = {};
 
 	app.get('/api/sync', function(req, res) {
 
 		var lat = parseFloat(req.query.lat);
 		var lng = parseFloat(req.query.lng);
-		var vin = req.query.vin;
+		var id = req.query.id;
 
 		var result = null;
-		if (!lat || !lng || !vin) {
+		if (!id) {
 			result = {
 				status: false
 			};
 		}
 		else {
-			vins[vin] = {
-				lat: lat,
-				lng: lng
-			};
+			if (!lat || !lng) {
+				delete ids[id]
+			}
+			else {
+				ids[id] = {
+					lat: lat,
+					lng: lng
+				};
+			}
 			result = {
 				status: true
 			};
@@ -35,11 +40,11 @@ exports.attach = function(app) {
 	app.get('/api/notify', function(req, res) {
 		var lat = parseFloat(req.query.lat);
 		var lng = parseFloat(req.query.lng);
-		var vin = req.query.vin;
+		var id = req.query.id;
 		var phone = req.query.phone;
 
 		var result = null;
-		if (!lat || !lng || !vin || !phone) {
+		if (!lat || !lng || !id || !phone) {
 			result = {
 				status: false
 			};
@@ -56,24 +61,30 @@ exports.attach = function(app) {
 	});
 
 	app.get('/api/get', function(req, res) {
-		var vin = req.query.vin;
+		var id = req.query.id;
 
 		var result = null;
-		if (!vin) {
+		if (!id) {
 			result = {
 				status: false
 			};
 		}
 		else {
-console.log(vins);
-			var vinData = vins[vin] || { lat: 37.77493, lng: -122.41942 }; 
+			var idData = ids[id] || { lat: 37.77493, lng: -122.41942 }; 
 			result = {
 				status: true,
-				lat: vinData.lat,
-				lng: vinData.lng
+				lat: idData.lat,
+				lng: idData.lng
 			};
 		}
 
 		res.send(result);
+	});
+
+	app.get('/api/start', function(req, res) {
+		var lat = parseFloat(req.query.lat);
+		var lng = parseFloat(req.query.lng);
+		var id = req.query.id;
+		res.send({});
 	});
 };
