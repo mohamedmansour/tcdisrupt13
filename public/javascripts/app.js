@@ -99,7 +99,7 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		pins.A = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(pinA.lat, pinA.lng)});
 		directionsManager.addWaypoint(pins.A);
 	
-		pins.B = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(pinB.lat, pinB.lng)});
+		pins.B = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(pinB.lat, pinB.lng), isViapoint:true});
 		directionsManager.addWaypoint(pins.B);
 	
 		pins.C = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(pinC.lat, pinC.lng)});
