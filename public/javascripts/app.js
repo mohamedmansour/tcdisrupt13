@@ -110,9 +110,9 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 	}
 	
 	//directionsManager.resetDirections();
-	pins.A.setOptions({ location: new Microsoft.Maps.Location(pinA.lat, pinA.lng) });
-	pins.B.setOptions({ location: new Microsoft.Maps.Location(pinB.lat, pinB.lng) });
-	pins.C.setOptions({ location: new Microsoft.Maps.Location(pinC.lat, pinC.lng) });
+	pins.A.setOptions({options:{ location: new Microsoft.Maps.Location(pinA.lat, pinA.lng) }});
+	pins.B.setOptions({options:{ location: new Microsoft.Maps.Location(pinB.lat, pinB.lng) }});
+	pins.C.setOptions({options:{ location: new Microsoft.Maps.Location(pinC.lat, pinC.lng) }});
 
 	directionsManager.calculateDirections();
 }
