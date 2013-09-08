@@ -93,7 +93,7 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		//directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 	
 		
-		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function() {console.log('Directions updated') });
+		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function(event) {console.log('Directions updated'); displayRouteNumber(event); });
 
 		directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
 
@@ -108,7 +108,7 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		directionsManager.addWaypoint(pins.C);
 	
 		// Specify a handler for when the directions are calculated
-		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', displayRouteNumber);
+		//Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', displayRouteNumber);
 	}
 	
 	//directionsManager.resetDirections();
