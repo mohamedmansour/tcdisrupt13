@@ -1,5 +1,8 @@
+var $id;
+var $label;
 function init() {
-	var $label = x$("#current-location");
+	$label = x$("#current-location");
+	$id = x$("#car-id");
     var button = document.getElementById('button-test');
     var GMButton = new gm.widgets.Button({
 		"label":"Start Demo",
@@ -9,15 +12,15 @@ function init() {
 	});
     GMButton.render();
 }
-/*
+
 function sendLocation(lat, lng, id)
 {
 	gm.comm.webServiceRequest(
 	    function(responseObj) {
 	    	if (!responseObj.success)
 	    	{
-	    		console.log('Update failed, stopping locaiton updates");
-	    		gm.info.clearPosition(watchPositionID);
+	    		console.log('Update failed, stopping locaiton updates');
+	    		//gm.info.clearPosition(watchPositionID);
 	    	} else {
 	    		console.log('Success: webServiceRequest.  Response: ' + responseObj);
 	    	}
@@ -31,22 +34,21 @@ function sendLocation(lat, lng, id)
 	      parameters: 
 	    	  { "lat": lat,
 	    	  	"lng": lng,
-	    	  	"vin": myId
+	    	  	"vin": id
 	    	  }
 	    }
     );
-};
-*/
+}
+
 function initiateSync(lat, lng, id) {
 	watchPositionID = gm.info.watchPosition(
 		    function(positionObj) {
-		    	var $label = x$("#current-location");
 		    	var lat =  positionObj.coords.latitude * 0.000000277777778;
 		    	var lng = positionObj.coords.longitude * 0.000000277777778;
 		        console.log('Success: watchPosition.');
 		        console.log('Timestamp: ' + positionObj.timestamp + ', Latitude: ' + lat + ', Longitude: ' + lng);
 		        $label.html("lat: " + lat + ", " + "lng: " + lng);
-		        //sendLocation(lat, lng, id);
+		        sendLocation(lat, lng, id);
 		    },
 		    function() {
 		        console.log('Failure: watchPosition. May need to load route in emulator.');
@@ -54,7 +56,7 @@ function initiateSync(lat, lng, id) {
 		    {
 		        maximumAge: 30000,
 		        timeout: 30000,
-		        frequency: 1000
+		        frequency: 5000
 		    }
 		);
 }
@@ -72,6 +74,7 @@ function makeid()
 
 startDemo = function(){
     var myId = makeid();
+    $id.html(myId);
 	gm.info.getCurrentPosition(
 	    function(positionObj) {
 	        console.log('Success: getCurrentPosition.');
@@ -84,7 +87,7 @@ startDemo = function(){
 	    {
 	        maximumAge: 30000,
 	        timeout: 30000,
-	        frequency: 1000
+	        frequency: 5000
 	    }
 	);
 };
