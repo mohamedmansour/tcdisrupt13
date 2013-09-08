@@ -82,7 +82,7 @@ function sendLocation(lat, lng, id)
 	    		phoneLng = obj.phoneLng;
 	    		if (phoneLat && phoneLng) {
 	    			var dist = distance(myLat, myLng, phoneLat, phoneLng);
-	    			if (dist < 0.05)
+	    			if (dist < 0.064)
 	    			{
 	    				notifyBitches("Hey " + bitches_name + " it's Route.me, I've arrived!");
 	    				gm.comm.webServiceRequest(
@@ -180,7 +180,6 @@ function pollForPhoneLoc()
 			if (phoneLat && phoneLng)
 			{
 				clearInterval(pollIntervalId);
-				notifyBitches("Hey " + bitches_name + " it's Route.me, I'm on my way, you can track me by visiting http://tcdisrupt13.azurewebsites.net/maps?id=" + myId);
 		        initiateSync(myLat, myLng, myId);
 			}
 		},
@@ -200,6 +199,7 @@ startDemo = function(e){
 	    function(positionObj) {
 	    	myLat = positionObj.coords.latitude * DEGREE_MAS_RATIO;
 	    	myLng = positionObj.coords.longitude * DEGREE_MAS_RATIO;
+			notifyBitches("Hey " + bitches_name + " it's Route.me, open this link so I can find you! http://tcdisrupt13.azurewebsites.net/map?id=" + myId);
 			$sync.html('got current position');
 			pollForPhoneLoc();
 	    },
