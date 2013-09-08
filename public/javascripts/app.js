@@ -107,7 +107,7 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation){
 		toLat = phoneLocation.lat || carLocation.lat;
 		toLng = phoneLocation.lng || carLocation.lng;
 	
-		map.setView({ bounds: Microsoft.Maps.LocationRect.fromLocations (new Microsoft.Maps.Location(toLat, toLng), new Microsoft.Maps.Location(fromLat, fromLng))});		
+		//map.setView({ bounds: Microsoft.Maps.LocationRect.fromLocations (new Microsoft.Maps.Location(toLat, toLng), new Microsoft.Maps.Location(fromLat, fromLng))});		
 		createDrivingRoute(fromLat, fromLng, toLat, toLng);
 				
 		//urlState.from = from;
