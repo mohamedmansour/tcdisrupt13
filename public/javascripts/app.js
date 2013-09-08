@@ -88,7 +88,7 @@ function createDrivingRoute(fromLat, fromLng, toLat, toLng, autoUpdateMapView) {
 
 
 
-function fetchLocationAndLaunchQuery(carLocation, phoneLocation){
+function fetchLocationAndLaunchQuery(carLocation, phoneLocation, redrawMap){
 	"use strict";
 	
 	var tasks={};
@@ -96,27 +96,6 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation){
 	if (!phoneLocation) { phoneLocation = {name:"Phone User", /*locationString:"SFO",*/ lat:null, lng: null}; }
 	if (!carLocation) { carLocation = {name:"Car Location", locationString:"SJC", lat:null, lng: null}; }
 	
-	map.entities.clear(); 
-
-	var carAndPhoneAreGeolocatedCallback = function() {
-		var fromLat, fromLng, toLat, toLng;
-		
-		fromLat = carLocation.lat || phoneLocation.lat;
-		fromLng = carLocation.lng || phoneLocation.lng;
-		
-		toLat = phoneLocation.lat || carLocation.lat;
-		toLng = phoneLocation.lng || carLocation.lng;
-	
-		//map.setView({ bounds: Microsoft.Maps.LocationRect.fromLocations (new Microsoft.Maps.Location(toLat, toLng), new Microsoft.Maps.Location(fromLat, fromLng))});		
-		createDrivingRoute(fromLat, fromLng, toLat, toLng);
-				
-		//urlState.from = from;
-		//urlState.q = to;
-		urlState.wp = [fromLat, fromLng, toLat, toLng];
-
-		_gaq.push(['_trackEvent', 'Map', 'DirectionSearch', getUrl()]);
-	}
-
 	if (!carLocation.lat && carLocation.locationString) {
 		console.log("Getting: car location from car location string");
 		tasks.carLocation = function(outerCallback) {
@@ -141,7 +120,10 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation){
 				console.log("Got: phone location from phone location string");
 				phoneLocation.lat = lat;
 				phoneLocation.lng = lng;
-				lastPhoneLocation = phoneLocation;
+				if (JSON.stringify(lastPhoneLocation) !== JSON.stringify(phoneLocation)) {
+					lastPhoneLocation = phoneLocation;
+					redrawMap = true;
+				}
 				console.log("Phone location: " + JSON.stringify(phoneLocation));
 				delete tasks.phoneLocation;
 				outerCallback();
@@ -163,8 +145,12 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation){
 				console.log("Got: phone location from HTML5 geolocation API");
 				phoneLocation.lat = position.coords.latitude;
 				phoneLocation.lng = position.coords.longitude;
-				lastPhoneLocation = phoneLocation;
 				phoneLocation.accuracy = position.coords.accuracy; // meters
+				
+				if (JSON.stringify(lastPhoneLocation) !== JSON.stringify(phoneLocation)) {
+					lastPhoneLocation = phoneLocation;
+					redrawMap = true;
+				}
 				
 				console.log("Phone location: " + JSON.stringify(phoneLocation));
 				delete tasks.phoneLocation;
@@ -186,6 +172,29 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation){
 				console.error("Geolocation services are not supported by your web browser.");
 			}
 		};
+		
+		var carAndPhoneAreGeolocatedCallback = function() {
+			var fromLat, fromLng, toLat, toLng;
+			
+			fromLat = carLocation.lat || phoneLocation.lat;
+			fromLng = carLocation.lng || phoneLocation.lng;
+			
+			toLat = phoneLocation.lat || carLocation.lat;
+			toLng = phoneLocation.lng || carLocation.lng;
+		
+			if (redrawMap) {
+				//map.setView({ bounds: Microsoft.Maps.LocationRect.fromLocations (new Microsoft.Maps.Location(toLat, toLng), new Microsoft.Maps.Location(fromLat, fromLng))});		
+
+				map.entities.clear(); 
+				createDrivingRoute(fromLat, fromLng, toLat, toLng);
+						
+				//urlState.from = from;
+				//urlState.q = to;
+				urlState.wp = [fromLat, fromLng, toLat, toLng];
+
+				_gaq.push(['_trackEvent', 'Map', 'DirectionSearch', getUrl()]);
+			}
+		}
 	}
 	
 	var checkIfDoneGeolocating = function() {
@@ -223,7 +232,7 @@ var getCarLocationTimer;
 function getCarLocation() {
 	"use strict";
 	
-	var jsonUrl = "/api/get?id=abc123";
+	var redrawMap = false, jsonUrl = "/api/get?id=abc123";
 	
 	if (lastPhoneLocation && lastPhoneLocation.lat !== undefined && lastPhoneLocation.lng !== undefined) {
 		jsonUrl += ("&lat=" + lastPhoneLocation.lat + "&lng=" + lastPhoneLocation.lng);
@@ -235,8 +244,12 @@ function getCarLocation() {
 			var carLocation
 			if (data && data.status) {
 				carLocation = {name:"Car Location", locationString:null, lat:data.lat, lng:data.lng};
-				lastCarLocation = carLocation;
-				fetchLocationAndLaunchQuery(carLocation, null);
+				if (JSON.stringify(lastCarLocation) !== JSON.stringify(carLocation)) {
+					lastCarLocation = carLocation;
+					redrawMap = true;
+				}
+				
+				fetchLocationAndLaunchQuery(carLocation, null, false);
 			}
 		},
 		error: function (request, status, error) {
