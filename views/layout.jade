@@ -1,0 +1,54 @@
+html(lang="en")
+	head(prefix='og: http://ogp.me/ns#')
+		title GM Friend Locator
+		meta(charset="utf-8")
+		meta(name="description", content="Help your friend find you.")
+		meta(property='og:title', content='GM Friend Locator')
+		meta(property='og:type', content='website')
+		meta(property='og:url', content='http://tcdisrupt13.azurewebsites.net/')
+		meta(property='og:description', content='Help your friend find you')
+		meta(property='og:image', content='https://sphotos-a.xx.fbcdn.net/hphotos-prn1/931211_10151707432727952_690478213_n.jpg')
+		meta(property='og:image:type', content='image/jpg')
+		meta(property='og:image:width', content='640')
+		meta(property='og:image:height', content='400')
+		meta("http-equiv"="X-UA-Compatible", content="IE=8, IE=9, IE=10")
+		meta(name="viewport", content="width=device-width")
+		meta(name="google-site-verification", content="abc123")
+		block styles
+			link(rel="stylesheet", href="/stylesheets/style.css")
+		script
+			var TCD13 = {
+				mapsKey: "!{ mapsKey }",
+				currentLocation: {
+					ll: [37.783333, -122.416667]
+				}
+			};
+		
+			if (window.location.hash == '#_=_') {
+				window.location.hash = '';
+				history.pushState('', document.title, window.location.pathname);
+			}
+		block head
+	body
+		block content
+		footer
+			| Powered by 
+			a(href="http://nodejs.org/") Node.js 
+			| hosted on 
+			a(href="http://www.windowsazure.com/") Windows Azure 
+			| with 
+			a(href="http://bing.com/maps/") Bing Maps 
+			span(class="#{env}") #{env}
+		
+		block scripts
+			script(src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+		script
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-NONE_SO_FAR']); // FIXME ME
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
