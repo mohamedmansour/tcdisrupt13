@@ -76,18 +76,21 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 
 	if (!directionsManager) {
 		directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
-	}
 	
-	Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function() {console.log('Directions updated') });
+		
+		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function() {console.log('Directions updated') });
 
-	directionsManager.resetDirections();
-	directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
+		directionsManager.resetDirections();
+		directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
 
-	if (carLocation.startLat !== undefined && (carLocation.startLat !== carLocation.lat || carLocation.startLng !== carLocation.lng)) {
-		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.startLat, carLocation.startLng)});
-		directionsManager.addWaypoint(waypoint);
+		if (carLocation.startLat !== undefined && (carLocation.startLat !== carLocation.lat || carLocation.startLng !== carLocation.lng)) {
+			waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.startLat, carLocation.startLng)});
+			directionsManager.addWaypoint(waypoint);
+		}
+		
+		// Specify a handler for when the directions are calculated
+		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', displayRouteNumber);
 	}
-
 	
 	if (carLocation.lat !== undefined) {
 		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.lat, carLocation.lng)});
@@ -99,10 +102,6 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(phoneLocation.lat, phoneLocation.lng)});
 		directionsManager.addWaypoint(waypoint);
 	}
-
-	// Specify a handler for when the directions are calculated
-	Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', displayRouteNumber);
-
 
 	directionsManager.calculateDirections();
 }
