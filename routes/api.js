@@ -1,6 +1,6 @@
 exports.attach = function(app) {
 	var ids = {
-		'abc123':  { lat: 37.77493, lng: -122.41942 }
+		'abc123':  { lat: 37.77493, lng: -122.41942, startLat: 37.77493, startLng: -122.41942 }
 	};
 
 	app.get('/api/sync', function(req, res) {
