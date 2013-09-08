@@ -79,7 +79,7 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 	directionsManager.resetDirections();
 	directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
 
-	if (carLocation.startLat !== undefined) {
+	if (carLocation.startLat !== undefined && (carLocation.startLat !== carLocation.lat || carLocation.startLng !== carLocation.lng)) {
 		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.startLat, carLocation.startLng)});
 		directionsManager.addWaypoint(waypoint);
 	}
