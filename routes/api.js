@@ -1,5 +1,7 @@
 exports.attach = function(app) {
-	var ids = {};
+	var ids = {
+		'abc123':  { lat: 37.77493, lng: -122.41942 }
+	};
 
 	app.get('/api/sync', function(req, res) {
 
@@ -9,26 +11,32 @@ exports.attach = function(app) {
 
 		var result = null;
 		if (!id) {
-			result = {
-				status: false
-			};
-		}
-		else {
-			if (!lat || !lng) {
-				delete ids[id]
-			}
-			else {
-				ids[id] = {
-					lat: lat,
-					lng: lng
-				};
-			}
-			result = {
-				status: true
-			};
+			res.send({
+				status: false,
+				message: 'Need and ID to continue'
+			});
+			return;
 		}
 
-		res.send(result);
+		if (!lat || !lng) {
+			delete ids[id];
+			res.send({status: true});
+			return;
+		}
+
+		var idVal = ids[id];
+		if (!idVal) {
+			idVal = ids[id] = {
+				lat: lat,
+				lng: lng
+			};
+		}
+		
+		res.send({
+			status: true,
+			phoneLat: idVal.phoneLat,
+			phoneLng: idVal.phoneLng
+		});
 	});	
 
 	app.get('/api/contacts', function(req, res) {
@@ -38,13 +46,11 @@ exports.attach = function(app) {
 	});
 
 	app.get('/api/notify', function(req, res) {
-		var lat = parseFloat(req.query.lat);
-		var lng = parseFloat(req.query.lng);
 		var id = req.query.id;
 		var phone = req.query.phone;
 
 		var result = null;
-		if (!lat || !lng || !id || !phone) {
+		if (!id || !phone) {
 			result = {
 				status: false
 			};
@@ -62,29 +68,38 @@ exports.attach = function(app) {
 
 	app.get('/api/get', function(req, res) {
 		var id = req.query.id;
-
+		var phoneLat = parseFloat(req.query.lat);
+		var phoneLng = parseFloat(req.query.lng);
+		
 		var result = null;
 		if (!id) {
-			result = {
-				status: false
-			};
-		}
-		else {
-			var idData = ids[id] || { lat: 37.77493, lng: -122.41942 }; 
-			result = {
-				status: true,
-				lat: idData.lat,
-				lng: idData.lng
-			};
+			res.send({
+				status: false,
+				message: 'Need and ID to continue'
+			});
+			return;
 		}
 
-		res.send(result);
-	});
+		var idData = ids[id];
+		if (!idData) {
+			res.send({
+				status: false,
+				message: 'No longer exists'
+			});
+			return;
+		}
 
-	app.get('/api/start', function(req, res) {
-		var lat = parseFloat(req.query.lat);
-		var lng = parseFloat(req.query.lng);
-		var id = req.query.id;
-		res.send({});
+		if (phoneLng && phoneLat) {
+			ids[id].phoneLng = phoneLng;
+			ids[id].phoneLat = phoneLat;
+		}
+
+		console.log(ids);
+		
+		res.send({
+			status: true,
+			lat: idData.lat,
+			lng: idData.lng
+		});
 	});
 };
