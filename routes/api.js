@@ -28,7 +28,9 @@ exports.attach = function(app) {
 		if (!idVal) {
 			idVal = ids[id] = {
 				lat: lat,
-				lng: lng
+				lng: lng,
+				startLat: lat,
+				startLng: lng
 			};
 		}
 		else {
@@ -101,7 +103,9 @@ exports.attach = function(app) {
 		res.send({
 			status: true,
 			lat: idData.lat,
-			lng: idData.lng
+			lng: idData.lng,
+			startLat: idData.startLat,
+			startLng: idData.startLng
 		});
 	});
 };
