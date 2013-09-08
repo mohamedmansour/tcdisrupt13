@@ -62,7 +62,7 @@ function appDeactivate() {
 	$("#theApp").addClass("obscured");
 }
 
-var directionsManager;
+var directionsManager, oldDirectionsManager;
 var pins = {A:null, B:null, C:null};
 
 function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
@@ -87,10 +87,14 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		lng:(phoneLocation.lng || carLocation.lng || carLocation.startLng)
 	}
 	
-	if (directionsManager) {
+	if (oldDirectionsManager) {
 		directionsManager.resetDirections();
 		directionsManager.dispose();
 		directionsManager = null;
+	}
+	
+	if (directionsManager) { // Double buffer to remove blinking
+		oldDirectionsManager = directionsManager;
 	}
 	
 	if (!directionsManager) {
@@ -101,7 +105,6 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 
 		directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
 
-		
 		pins.A = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(pinA.lat, pinA.lng)});
 		directionsManager.addWaypoint(pins.A);
 	
