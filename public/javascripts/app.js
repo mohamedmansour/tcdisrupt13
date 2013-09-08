@@ -66,42 +66,56 @@ var boundingBoxesCache = {};
 
 
 var directionsManager;
+var pins = {A:null, B:null, C:null};
 
 function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 	"use strict";
 
-	var waypoint;
+	var waypoint, pinA, pinB, pinC;
 	
 	if (autoUpdateMapView === undefined) autoUpdateMapView = true;
 
+	pinA = { 
+		lat:(carLocation.startLat || carLocation.lat || phoneLocation.lat),
+		lng:(carLocation.startLng || carLocation.lng || phoneLocation.lng)
+	}
+	
+	pinB = { 
+		lat:(carLocation.lat || carLocation.startLat || phoneLocation.lat),
+		lng:(carLocation.lng || carLocation.startLng || phoneLocation.lng)
+	}
+	
+	pinC = { 
+		lat:(phoneLocation.lat || carLocation.lat || carLocation.startLat),
+		lng:(phoneLocation.lng || carLocation.lng || carLocation.startLng)
+	}
+		
 	if (!directionsManager) {
 		directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 	
 		
 		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function() {console.log('Directions updated') });
 
-		directionsManager.resetDirections();
 		directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
 
-		if (carLocation.startLat !== undefined && (carLocation.startLat !== carLocation.lat || carLocation.startLng !== carLocation.lng)) {
-			waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.startLat, carLocation.startLng)});
-			directionsManager.addWaypoint(waypoint);
-		}
 		
+		pins.A = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(pinA.lat, pinA.lng)});
+		directionsManager.addWaypoint(pins.A);
+	
+		pins.B = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(pinB.lat, pinB.lng)});
+		directionsManager.addWaypoint(pins.B);
+	
+		pins.C = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(pinC.lat, pinC.lng)});
+		directionsManager.addWaypoint(pins.C);
+	
 		// Specify a handler for when the directions are calculated
 		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', displayRouteNumber);
 	}
 	
-	if (carLocation.lat !== undefined) {
-		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.lat, carLocation.lng)});
-		directionsManager.addWaypoint(waypoint);
-	}
-
-	
-	if (phoneLocation.lat !== undefined) {
-		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(phoneLocation.lat, phoneLocation.lng)});
-		directionsManager.addWaypoint(waypoint);
-	}
+	//directionsManager.resetDirections();
+	pins.A.setOptions({ location: {latitude:pinA.lat, longitude:pinA.lng} });
+	pins.B.setOptions({ location: {latitude:pinB.lat, longitude:pinB.lng} });
+	pins.C.setOptions({ location: {latitude:pinC.lat, longitude:pinC.lng} });
 
 	directionsManager.calculateDirections();
 }
