@@ -11,7 +11,7 @@
     "jade": "0.28.x",
     "nconf": "0.6.x",
     "azure": "0.7.x",
-    "socket.io": "1.0.0"
+    "socket.io": "0.9.16"
   },
   "engines": {
     "node": "0.8.x || 0.10.x"
