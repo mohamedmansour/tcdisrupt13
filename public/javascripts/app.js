@@ -87,8 +87,11 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		lng:(phoneLocation.lng || carLocation.lng || carLocation.startLng)
 	}
 		
+	directionsManager.clear();
+	directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+	
 	if (!directionsManager) {
-		directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+		//directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 	
 		
 		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function() {console.log('Directions updated') });
@@ -110,9 +113,9 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 	}
 	
 	//directionsManager.resetDirections();
-	pins.A.setOptions({location: new Microsoft.Maps.Location(pinA.lat, pinA.lng)});
-	pins.B.setOptions({location: new Microsoft.Maps.Location(pinB.lat, pinB.lng)});
-	pins.C.setOptions({location: new Microsoft.Maps.Location(pinC.lat, pinC.lng)});
+	pins.A.setOptions({ location: new Microsoft.Maps.Location(pinA.lat, pinA.lng) });
+	pins.B.setOptions({ location: new Microsoft.Maps.Location(pinB.lat, pinB.lng) });
+	pins.C.setOptions({ location: new Microsoft.Maps.Location(pinC.lat, pinC.lng) });
 
 	directionsManager.calculateDirections();
 }
