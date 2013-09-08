@@ -21,28 +21,30 @@
     </head>
     <body onload="gm.system.init();javascript:init()">
     	<div id="header"><img src="http://tcdisrupt13.azurewebsites.net/images/logo.png" /></div>
-  		<div id="car-id"></div>
-  		<div id="sync-status"></div>
-  		<div id="current-location"></div>
-  		<div id="contacts"></div>
-  		<div id="button-test"></div>
+  		<div id="debugstatus">
+	  		<div id="car-id"></div>
+	  		<div id="sync-status"></div>
+	  		<div id="current-location"></div>
+	  		<div id="contacts"></div>
+	  		<div id="button-test"></div>
+  		</div>
   		<ul class="contact-list">
-  			<li>
-  				<button class="contact" data-id="1">
+  			<li class="onlinestatus">
+  				<button class="contact " data-id="1">
   				<img src="http://graph.facebook.com/ormont/picture?type=large"/> Justin Ormont
   				</button>
   			</li>
-  			<li>
-  				<button class="contact" data-id="2">
+  			<li class="onlinestatus">
+  				<button class="contact " data-id="2">
   				<img src="http://graph.facebook.com/anirudh.koul/picture?type=large"/> Anirudh Koul
   				</button>
   			</li>
-  			<li>
-  			  	<button class="contact" data-id="3">
+  			<li class="busystatus">
+  			  	<button class="contact " data-id="3">
   				<img src="http://graph.facebook.com/mohamedmansour/picture?type=large"/> Mohamed Mansour
   				</button>
   			</li>
-  			<li>
+  			<li class="awaystatus">
   			  	<button class="contact" data-id="4">
   				<img src="http://graph.facebook.com/jonah.kim/picture?type=large"/> Jonah Kim
   				</button>

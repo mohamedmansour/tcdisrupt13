@@ -9,7 +9,7 @@ function init() {
 	  }
 	}
 	
-	//x$(".contact").click(startDemo);
+	x$(".contact").click(startDemo);
 
 	$label = x$("#current-location");
 	$id = x$("#car-id");
@@ -144,7 +144,10 @@ function pollForPhoneLoc()
 		1000);
 }
 
-startDemo = function(){
+startDemo = function(e){
+	x$('.contact-list')[0].style.display = "none";	
+	
+	
     myId = makeid();
     $id.html(myId);
 	gm.info.getCurrentPosition(
