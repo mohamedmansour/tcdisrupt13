@@ -3,3 +3,47 @@ body {
 	padding: 0;
 	overflow: hidden;
 }
+
+#header {
+	color: #666;
+	font-weight: bold;
+	margin-left: 50px;
+	background-color: #fff;
+	display:inline;
+	border-radius: 20px;
+}
+
+#header img {
+	width: 32px;
+}
+.contact-list button {
+	border: none;
+	width: 340px;
+	line-height: 100px;
+	text-align: left;
+	padding:0;
+	margin: 0;
+	background-color: white;
+	font-size: 20px;
+}
+
+.contact-list {
+	list-style-type: none;
+}
+.contact-list li {
+	display: inline-block;
+	margin: 10px;
+}
+
+
+.contact-list button:hover {
+	outline: 5px solid #000;
+}
+
+.contact-list img {
+	vertical-align: top;
+	text-align: left;
+	margin-right: 15px;
+	width: 100px;
+	height: 100px;
+}
