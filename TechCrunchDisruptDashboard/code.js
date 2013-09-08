@@ -1,6 +1,8 @@
 var $label, $sync, $id, myLat, myLng, myId, phoneLat, phoneLng, bitches_name;
 var DEGREE_MAS_RATIO = 0.000000277777778;
 var bitches_phone = "14127222757";
+var domain = "http://tcdisrupt13.azurewebsites.net";
+//var domain = "http://localhost:3000";
 function init() {
 	
 	/** Converts numeric degrees to radians */
@@ -15,7 +17,6 @@ function init() {
 	$label = x$("#current-location");
 	$id = x$("#car-id");
 	$sync = x$("#sync-status");
-	$loading-gif = x$("#loading-gif");
 	/*
     var button = document.getElementById('button-test');
     var GMButton = new gm.widgets.Button({
@@ -35,7 +36,7 @@ function notifyBitches(message){
 		    function(responseObj) {
 		    },
 		    {
-		      url: "http://tcdisrupt13.azurewebsites.net/api/notify",
+		      url: domain + "/api/notify",
 		      method: "GET",
 		      parameters: 
 		    	  {
@@ -90,7 +91,7 @@ function sendLocation(lat, lng, id)
 	    					    function(responseObj) {
 	    					    },
 	    					    {
-	    					      url: "http://tcdisrupt13.azurewebsites.net/api/sync",
+	    					      url: domain + "/api/sync",
 	    					      method: "GET",
 	    					      parameters: 
 	    					    	  {
@@ -110,7 +111,7 @@ function sendLocation(lat, lng, id)
 	    function(responseObj) {
 	    },
 	    {
-	      url: "http://tcdisrupt13.azurewebsites.net/api/sync",
+	      url: domain + "/api/sync",
 	      method: "GET",
 	      parameters: 
 	    	  { "lat": lat,
@@ -197,8 +198,8 @@ startDemo = function(e){
     $id.html(myId);
 	gm.info.getCurrentPosition(
 	    function(positionObj) {
-	    	myLat = positionObj.coords.latitude;
-	    	myLng = positionObj.coords.longitude;
+	    	myLat = positionObj.coords.latitude * DEGREE_MAS_RATIO;
+	    	myLng = positionObj.coords.longitude * DEGREE_MAS_RATIO;
 			$sync.html('got current position');
 			pollForPhoneLoc();
 	    },
