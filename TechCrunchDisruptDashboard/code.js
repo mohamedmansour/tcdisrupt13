@@ -1,8 +1,9 @@
-var $id;
-var $label;
+var $label, $sync, $id, myLat, myLng, myId, phoneLat, phoneLng;
+var DEGREE_MAS_RATIO = 0.000000277777778;
 function init() {
 	$label = x$("#current-location");
 	$id = x$("#car-id");
+	$sync = x$("#sync-status");
     var button = document.getElementById('button-test');
     var GMButton = new gm.widgets.Button({
 		"label":"Start Demo",
@@ -17,16 +18,18 @@ function sendLocation(lat, lng, id)
 {
 	gm.comm.webServiceRequest(
 	    function(responseObj) {
-	    	if (!responseObj.success)
+	    	var obj = JSON.parse(responseObj);
+	    	if (obj.status)
 	    	{
-	    		console.log('Update failed, stopping locaiton updates');
-	    		//gm.info.clearPosition(watchPositionID);
+	    		phoneLat = obj.phoneLat;
+	    		phoneLng = obj.phoneLng;
+	    		$sync.html("polling.. phone lat: " + phoneLat + "phone lng: " + phoneLng);
 	    	} else {
-	    		console.log('Success: webServiceRequest.  Response: ' + responseObj);
+	    		$sync.html("FAILED");
+	    		//gm.info.clearPosition(watchPositionID);
 	    	}
 	    },
 	    function(responseObj) {
-	    	console.log('Failure: webServiceRequest.  Response: ' + responseObj);
 	    },
 	    {
 	      url: "http://tcdisrupt13.azurewebsites.net/api/sync",
@@ -34,122 +37,92 @@ function sendLocation(lat, lng, id)
 	      parameters: 
 	    	  { "lat": lat,
 	    	  	"lng": lng,
-	    	  	"vin": id
+	    	  	"id": id
 	    	  }
 	    }
     );
 }
 
 function initiateSync(lat, lng, id) {
-	watchPositionID = gm.info.watchPosition(
-		    function(positionObj) {
-		    	var lat =  positionObj.coords.latitude * 0.000000277777778;
-		    	var lng = positionObj.coords.longitude * 0.000000277777778;
-		        console.log('Success: watchPosition.');
-		        console.log('Timestamp: ' + positionObj.timestamp + ', Latitude: ' + lat + ', Longitude: ' + lng);
-		        $label.html("lat: " + lat + ", " + "lng: " + lng);
-		        sendLocation(lat, lng, id);
-		    },
-		    function() {
-		        console.log('Failure: watchPosition. May need to load route in emulator.');
-		    },
-		    {
-		        maximumAge: 30000,
-		        timeout: 30000,
-		        frequency: 5000
-		    }
+	
+	if (phoneLat && phoneLng) {
+		//debugger;
+		$sync.html("setting dest lat: " + phoneLat/DEGREE_MAS_RATIO + " lng: " + phoneLng/DEGREE_MAS_RATIO);
+		gm.navigation.setDestination(
+			function(responseObj) {
+			    console.log('Success: setDestination.');
+			    watchPositionID = gm.info.watchPosition(
+					    function(positionObj) {
+					    	myLat =  positionObj.coords.latitude * DEGREE_MAS_RATIO;
+					    	myLng = positionObj.coords.longitude * DEGREE_MAS_RATIO;
+					        $label.html("lat: " + myLat + ", " + "lng: " + myLng);
+					        sendLocation(myLat, myLng, myId);
+					    },
+					    function() {
+					    },
+					    {
+					        maximumAge: 30000,
+					        timeout: 30000,
+					        frequency: 3000
+					    }
+				);
+			},
+			function() {
+			    console.log('Failure: setDestination.');
+			},
+			{
+				"latitude" : "" + phoneLat/DEGREE_MAS_RATIO,
+				"longitude" : "" + phoneLng/DEGREE_MAS_RATIO
+			}
 		);
+	}
 }
 
 function makeid()
 {
-    var text = "";
+    var text = "abc123";
+    /*
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     for( var i=0; i < 10; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    {    
+    	text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    */
 
     return text;
 }
 
+function pollForPhoneLoc()
+{
+	var pollIntervalId = 
+		setInterval(function(){
+			sendLocation(myLat, myLng, myId);
+			if (phoneLat && phoneLng)
+			{
+				clearInterval(pollIntervalId);
+		        initiateSync(myLat, myLng, myId);
+			}
+		},
+		1000);
+}
+
 startDemo = function(){
-    var myId = makeid();
+    myId = makeid();
     $id.html(myId);
 	gm.info.getCurrentPosition(
 	    function(positionObj) {
-	        console.log('Success: getCurrentPosition.');
-	        console.log('Timestamp: ' + positionObj.timestamp + ', Latitude: ' + positionObj.coords.latitude + ', Longitude: ' + positionObj.coords.longitude);
-	        initiateSync(positionObj.coords.latitude, positionObj.coords.longitude, myId);
+	    	myLat = positionObj.coords.latitude;
+	    	myLng = positionObj.coords.longitude;
+			$sync.html('got current position');
+			pollForPhoneLoc();
 	    },
 	    function() {
-	        console.log('Failure: getCurrentPosition. May need to load route in emulator.');
 	    },
 	    {
 	        maximumAge: 30000,
 	        timeout: 30000,
-	        frequency: 5000
+	        frequency: 3000
 	    }
 	);
 };
-
-
-/*
-function contact()
-{
-	gm.comm.webServiceRequest(
-		    function(responseObj) {
-		        if (responseObj.success){
-			        console.log('Success: contact. Message: starting updates!');
-		        	//startUpdates();
-		        }
-		    },
-		    function(responseObj) {
-		        console.log('Failure: contact.  Response: ' + responseObj);
-		    },
-		    {
-		    url: "http://tcdisrupt13.azurewebsites.com/api/contact",
-		    method: "GET",
-		    parameters:
-		        {
-		           "vin" : gm.info.getVIN()
-		        }
-		    }
-		);
-}
-
-*/
-
-
-/*
-function getContacts() {
-	var $contacts = x$("contacts");
-	gm.comm.webServiceRequest(
-	    function(responseObj) {
-	        console.log('Success: webServiceRequest.  Response: ' + responseObj);
-	    },
-	    function(responseObj) {
-	        console.log('Failure: webServiceRequest.  Response: ' + responseObj);
-	    },
-	    {
-	    url: "http://tcdisrupt13.azurewebsites.com/api/contacts",
-	    method: "GET",
-	    parameters:
-	        {
-	            : 99999
-	        }
-	    }
-	);
-}
-
-function onDoneCallBack(data) {
-	  console.log('onDone called with -> ' + data.value);
-}
-
-function onCancelCallBack() {
-	console.log('Canceled!');
-}
-
-function showKeyboardEmail() {
-	var keyboard = new gm.widgets.Keyboard({sender: null, language: "en-US", kbType: 1, feedbackMode: 0, Theme:'gmc', placeholder:'Placeholder', onDone: onDoneCallBack, onCancel:onCancelCallBack});
-}
-*/
