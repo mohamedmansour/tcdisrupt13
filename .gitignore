@@ -5,3 +5,6 @@ RemoteSystemsTempFiles/
 .DS_Store
 .chr*
 filesystem/
+config_development.json
+config.json
+

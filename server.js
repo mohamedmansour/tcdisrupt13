@@ -22,6 +22,7 @@ app.configure(function() {
     app.use(function (req, res, next) {
       res.locals.user = req.user;
       res.locals.env = process.env.NODE_ENV || 'development';
+	  res.locals.mapsKey = nconf.get("BING_MAPS_API");
       next();
     });
 
@@ -29,7 +30,15 @@ app.configure(function() {
 });
 
 app.configure('production', function() {
+  nconf.env().file({ file: "config_production.json" });
+  app.use(express.errorHandler());
   nconf.env();
+});
+
+app.configure('development', function() {
+  nconf.env().file({ file: "config_development.json" });
+  app.use(express.errorHandler());
+  app.locals.pretty = true;
 });
 
 routes.attach(app);
@@ -37,3 +46,4 @@ routes.attach(app);
 http.createServer(app).listen(app.get('port'), function() {
   console.log("Node server listening on port " + app.get('port'));
 });
+
