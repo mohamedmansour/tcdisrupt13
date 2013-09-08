@@ -259,10 +259,11 @@ function getCarLocation() {
 				carLocation = {name:"Car Location", locationString:null, lat:data.lat, lng:data.lng, startLat:data.startLat, startLng:data.startLng};
 				if (JSON.stringify(lastCarLocation) !== JSON.stringify(carLocation)) {
 					lastCarLocation = carLocation;
+					console.log("Car has moved from: " + JSON.stringify(lastCarLocation) + " to " + JSON.stringify(carLocation));
 					redrawMap = true;
 				}
 				
-				fetchLocationAndLaunchQuery(carLocation, null, false);
+				fetchLocationAndLaunchQuery(carLocation, null, redrawMap);
 			}
 		},
 		error: function (request, status, error) {
