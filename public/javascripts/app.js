@@ -97,7 +97,7 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		oldDirectionsManager = directionsManager;
 	}
 	
-	if (!directionsManager) {
+	if (!directionsManager || true) {
 		directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 	
 		
