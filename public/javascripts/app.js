@@ -65,6 +65,7 @@ var photoSetOnDisplay = 0;
 var boundingBoxesCache = {};
 
 
+var directionsManager;
 
 function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 	"use strict";
@@ -73,7 +74,9 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 	
 	if (autoUpdateMapView === undefined) autoUpdateMapView = true;
 
-	var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+	if (!directionsManager) {
+		directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+	}
 	
 	Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function() {console.log('Directions updated') });
 
@@ -82,7 +85,7 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 
 	// Specify a handler for when the directions are calculated
 	Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function(e) {
-		console.log("Total Distance: " + e.routeSummary[0].distance + " miles\n" + "Total Time: " + e.routeSummary[0].time/60 + " minutes" );
+		console.log("Total Distance: " + e.routeSummary[0].distance + " miles\n" + "Total Time: " + e.routeSummary[0].timeWithTraffic/60 + " minutes" );
 	});
 
 
