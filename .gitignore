@@ -2,3 +2,6 @@ node_modules/
 .metadata/
 *.zip
 RemoteSystemsTempFiles/
+.DS_Store
+.chr*
+filesystem/
