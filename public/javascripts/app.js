@@ -93,13 +93,10 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		directionsManager = null;
 	}
 	
-	if (directionsManager) { // Double buffer to remove blinking
-		oldDirectionsManager = directionsManager;
-	}
-	
 	if (!directionsManager || true) {
 		directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 	
+		oldDirectionsManager = directionsManager;
 		
 		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function() {console.log('Directions updated') });
 
