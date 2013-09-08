@@ -22,12 +22,13 @@ function init() {
 		searchManager = new Microsoft.Maps.Search.SearchManager(map);
 	});
 
+	Microsoft.Maps.loadModule('Microsoft.Maps.Directions', { callback: getCarLocation }); // Starts the polling of the car location once the directions manager module is loaded
+
 	currentLocation = TCD13.currentLocation;
 
 	map.setView({ zoom: 11, center: new Microsoft.Maps.Location(currentLocation.ll[0], currentLocation.ll[1])});
 	map.entities.clear();
 	
-	getCarLocation();
 }
 
 function initAfterFirstMapLoad() {
@@ -79,6 +80,12 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 	directionsManager.resetDirections();
 	directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
 
+	// Specify a handler for when the directions are calculated
+	Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function(e) {
+		console.log("Total Distance: " + e.routeSummary[0].distance + " miles\n" + "Total Time: " + e.routeSummary[0].time/60 + " minutes" );
+	});
+
+
 	if (carLocation.startLat !== undefined && (carLocation.startLat !== carLocation.lat || carLocation.startLng !== carLocation.lng)) {
 		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.startLat, carLocation.startLng)});
 		directionsManager.addWaypoint(waypoint);
@@ -118,14 +125,11 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation, redrawMap){
 	if (!carLocation) { carLocation = {name:"Car Location", locationString:"SJC", lat:null, lng: null}; }
 	
 	if (!carLocation.lat && carLocation.locationString) {
-		console.log("Getting: car location from car location string");
 		tasks.carLocation = function(outerCallback) {
 			var callback = function(lat,lng) {
-				console.log("Got: car location from car location string");
 				carLocation.lat = lat;
 				carLocation.lng = lng;
 				lastCarLocation = carLocation;
-				console.log("Car location: " + JSON.stringify(carLocation));
 				delete tasks.carLocation;
 				outerCallback();
 			}
@@ -135,17 +139,14 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation, redrawMap){
 	}
 	
 	if (!phoneLocation.lat && phoneLocation.locationString) {
-		console.log("Getting: phone location from phone location string");
 		tasks.phoneLocation = function(outerCallback) {
 			var callback = function(lat,lng) {
-				console.log("Got: phone location from phone location string");
 				phoneLocation.lat = lat;
 				phoneLocation.lng = lng;
 				if (JSON.stringify(lastPhoneLocation) !== JSON.stringify(phoneLocation)) {
 					lastPhoneLocation = phoneLocation;
 					redrawMap = true;
 				}
-				console.log("Phone location: " + JSON.stringify(phoneLocation));
 				delete tasks.phoneLocation;
 				outerCallback();
 			}
@@ -155,15 +156,12 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation, redrawMap){
 
 	}
 	else if (!phoneLocation.lat) {
-		console.log("Getting: phone location from HTML5 geolocation API");
-		
 		tasks.phoneLocation = function(outerCallback) { // new name space
 			var html5Geolocation;
 			
 			html5Geolocation = navigator.geolocation;
 			
 			var callbackSuccess = function(position) {
-				console.log("Got: phone location from HTML5 geolocation API");
 				phoneLocation.lat = position.coords.latitude;
 				phoneLocation.lng = position.coords.longitude;
 				phoneLocation.accuracy = position.coords.accuracy; // meters
@@ -173,7 +171,6 @@ function fetchLocationAndLaunchQuery(carLocation, phoneLocation, redrawMap){
 					redrawMap = true;
 				}
 				
-				console.log("Phone location: " + JSON.stringify(phoneLocation));
 				delete tasks.phoneLocation;
 				
 				outerCallback();
