@@ -1,0 +1,17 @@
+extends layout
+
+append styles
+  link(rel="stylesheet", href="/stylesheets/map.css")
+
+append scripts
+  script(src="//ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0")
+  script(src="/javascripts/website.js")
+  script(src="/javascripts/app.js")
+
+block content
+  #welcomeScreen
+    img#introLogo.hidden(src="/images/logo.svg")
+    #bigSearchBar
+      h1#headerBar Help your friend navigate.
+      #theApp.obscured
+      #mapFrame
