@@ -60,10 +60,10 @@ exports.attach = function(app) {
 	app.get('/api/notify', function(req, res) {
 		var id = req.query.id;
 		var phone = req.query.phone;
-		var message = req.query.message;
+		var themessage = req.query.message;
 
 		var result = null;
-		if (!id || !phone || !message) {
+		if (!id || !phone || !themessage) {
 			result = {
 				status: false
 			};
@@ -77,7 +77,7 @@ exports.attach = function(app) {
 			twilioClient.sms.messages.create({
 				to: phone,
 				from: '+14123574043',
-				body: messaged
+				body: themessage
 			}, function(error, message) {
 				if (!error) {
 					console.log(message.sid);
