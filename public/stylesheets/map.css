@@ -14,3 +14,9 @@ header {
 .loggedIn {
 	padding: 9px 20px 8px 15px
 }
+
+img[src*="POI_dd-via-large.png"] {
+	transform: scale(2,2);
+	-ms-transform: scale(2,2); /* IE 9 */
+	-webkit-transform: scale(2,2); /* Safari and Chrome */
+}
