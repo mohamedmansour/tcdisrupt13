@@ -2,7 +2,8 @@ var http = require('http')
   , express = require('express')
   , nconf = require('nconf')
   , path = require('path')
-  , app = exports.app = express();
+  , app = exports.app = express()
+  , routes = require('./routes');
 
 app.configure(function() {
     app.set('trust proxy', true);
@@ -31,7 +32,8 @@ app.configure('production', function() {
   nconf.env();
 });
 
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-}).listen(app.get('port'));
+routes.attach(app);
+
+http.createServer(app).listen(app.get('port'), function() {
+  console.log("Node server listening on port " + app.get('port'));
+});
