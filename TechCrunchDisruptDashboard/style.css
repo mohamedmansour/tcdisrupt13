@@ -47,3 +47,20 @@ body {
 	width: 100px;
 	height: 100px;
 }
+
+.onlinestatus {
+	border-left: 5px solid rgb(94, 210, 86);
+}
+.awaystatus {
+	border-left: 5px solid rgb(255, 210, 1);
+}
+.busystatus {
+	border-left: 5px solid rgb(208,25,23);
+}
+
+#debugstatus 
+{
+	color: #aaa;
+	margin-left: 50px;
+	font-size: 20px;
+}
