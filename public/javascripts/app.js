@@ -96,10 +96,18 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		directionsManager.addWaypoint(waypoint);
 	}
 
+	// Specify a handler for when the directions are calculated
+	Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', displayRouteNumber);
+
+
 	directionsManager.calculateDirections();
 }
 
-
+function displayRouteNumber(event) {
+	"use strict";
+	
+	console.log("Number of transit routes available: " + event.route.length);
+}
 
 function fetchLocationAndLaunchQuery(carLocation, phoneLocation, redrawMap){
 	"use strict";
