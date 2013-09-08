@@ -1,4 +1,10 @@
+var twilio = require('twilio');
+
+
 exports.attach = function(app) {
+	var nconf = app.get('conf');
+	var twilioClient = new twilio.RestClient(nconf.get('TWILIO_SID'), nconf.get('TWILIO_API'));
+
 	var ids = {
 		'abc123':  { lat: 37.77493, lng: -122.41942, startLat: 37.77493, startLng: -122.41942 }
 	};
@@ -67,6 +73,15 @@ exports.attach = function(app) {
 			};
 
 			// Send Twillio API the phone.
+			twilioClient.sms.messages.create({
+				to: phone,
+				from: '+14123574043',
+				body: 'Hello!! http://tcdisrupt13.azurewebsites.net/map?id=' + id
+			}, function(error, message) {
+				if (!error) {
+					console.log(message.sid);
+				}
+			}); 
 		}
 
 		res.send(result);
