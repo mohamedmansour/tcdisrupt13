@@ -8,14 +8,12 @@ body {
 	color: #666;
 	font-weight: bold;
 	margin-left: 50px;
-	background-color: #fff;
 	display:inline;
-	border-radius: 20px;
+}
+#header img {
+	height: 80px;
 }
 
-#header img {
-	width: 32px;
-}
 .contact-list button {
 	border: none;
 	width: 340px;
@@ -29,6 +27,8 @@ body {
 
 .contact-list {
 	list-style-type: none;
+	margin: 0 0 0 50px;
+	padding: 0;
 }
 .contact-list li {
 	display: inline-block;

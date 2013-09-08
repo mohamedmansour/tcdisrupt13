@@ -76,24 +76,21 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 
 	if (!directionsManager) {
 		directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
-	}
 	
-	Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function() {console.log('Directions updated') });
+		
+		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function() {console.log('Directions updated') });
 
-	directionsManager.resetDirections();
-	directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
+		directionsManager.resetDirections();
+		directionsManager.setRequestOptions({routeMode: Microsoft.Maps.Directions.RouteMode.driving, autoUpdateMapView: autoUpdateMapView });
 
-	// Specify a handler for when the directions are calculated
-	Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', function(e) {
-		console.log("Total Distance: " + e.routeSummary[0].distance + " miles\n" + "Total Time: " + e.routeSummary[0].timeWithTraffic/60 + " minutes" );
-	});
-
-
-	if (carLocation.startLat !== undefined && (carLocation.startLat !== carLocation.lat || carLocation.startLng !== carLocation.lng)) {
-		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.startLat, carLocation.startLng)});
-		directionsManager.addWaypoint(waypoint);
+		if (carLocation.startLat !== undefined && (carLocation.startLat !== carLocation.lat || carLocation.startLng !== carLocation.lng)) {
+			waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.startLat, carLocation.startLng)});
+			directionsManager.addWaypoint(waypoint);
+		}
+		
+		// Specify a handler for when the directions are calculated
+		Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', displayRouteNumber);
 	}
-
 	
 	if (carLocation.lat !== undefined) {
 		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(carLocation.lat, carLocation.lng)});
@@ -105,10 +102,6 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		waypoint = new Microsoft.Maps.Directions.Waypoint({location: new Microsoft.Maps.Location(phoneLocation.lat, phoneLocation.lng)});
 		directionsManager.addWaypoint(waypoint);
 	}
-
-	// Specify a handler for when the directions are calculated
-	Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', displayRouteNumber);
-
 
 	directionsManager.calculateDirections();
 }
@@ -122,8 +115,6 @@ function displayRouteNumber(event) {
 		if (event && event.route && event.route[0] && event.route[0].routeLegs && event.route[0].routeLegs[1] && event.route[0].routeLegs[1].summary && event.route[0].routeLegs[1].summary.timeWithTraffic) {
 			remainingTime = event.route[0].routeLegs[1].summary.timeWithTraffic;
 			totalTime = event.route[0].routeLegs[0].summary.timeWithTraffic + remainingTime;
-			
-			console.log("Number of transit routes available: " + event.route.length);
 			
 			console.log("Time remaining: " + remainingTime);
 			console.log("Percent done: " + Math.round((1-remainingTime/totalTime)*1000)/10 + "%");
@@ -284,7 +275,7 @@ function getCarLocation() {
 	});
 	
 	if (!getCarLocationTimer) {
-		getCarLocationTimer = setInterval(getCarLocation, 1000);
+		getCarLocationTimer = setInterval(getCarLocation, 3000);
 	}
 }
 
