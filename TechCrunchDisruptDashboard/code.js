@@ -1,11 +1,5 @@
 function init() {
-	var keyboardBtn = new gm.widgets.Button({ label: "Show keyboard",
-    	callBack: showKeyboardEmail,
-        parentElement: document.getElementById('showKeyboard')
-    });
-    keyboardBtn.render();
-  	    
-   getAPI();   	    
+  	 getAPI();   	    
  }
 
 function getAPI() {
