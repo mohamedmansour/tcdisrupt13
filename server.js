@@ -22,7 +22,7 @@ app.configure(function() {
     app.use(function (req, res, next) {
       res.locals.user = req.user;
       res.locals.env = process.env.NODE_ENV || 'development';
-	  res.locals.mapsKey = nconf.get("BING_MAPS_API");
+	    res.locals.mapsKey = nconf.get("BING_MAPS_API");
       next();
     });
 
@@ -30,7 +30,6 @@ app.configure(function() {
 });
 
 app.configure('production', function() {
-  nconf.env().file({ file: "config_production.json" });
   app.use(express.errorHandler());
   nconf.env();
 });
