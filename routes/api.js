@@ -1,6 +1,6 @@
 exports.attach = function(app) {
 	var ids = {
-		'abc123':  { lat: 37.77493, lng: -122.41942 }
+		'abc123':  { lat: 37.77493, lng: -122.41942, startLat: 37.77493, startLng: -122.41942 }
 	};
 
 	app.get('/api/sync', function(req, res) {
@@ -28,8 +28,14 @@ exports.attach = function(app) {
 		if (!idVal) {
 			idVal = ids[id] = {
 				lat: lat,
-				lng: lng
+				lng: lng,
+				startLat: lat,
+				startLng: lng
 			};
+		}
+		else {
+			idVal.lat = ids[id].lat = lat;
+			idVal.lng = ids[id].lng = lng;
 		}
 		
 		res.send({
@@ -94,12 +100,12 @@ exports.attach = function(app) {
 			ids[id].phoneLat = phoneLat;
 		}
 
-		console.log(ids);
-		
 		res.send({
 			status: true,
 			lat: idData.lat,
-			lng: idData.lng
+			lng: idData.lng,
+			startLat: idData.startLat,
+			startLng: idData.startLng
 		});
 	});
 };

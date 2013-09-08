@@ -38,6 +38,7 @@ function restoreStateFromUrl() {
 			queryTerms[queryParameterSplit[0]] = queryParameterSplit[1];
 		});
 		
+		if (queryTerms.id && queryTerms.id.length) { urlState.id = decodeURIComponent(queryTerms.id); }
 		if (queryTerms.q && queryTerms.q.length) { urlState.q = decodeURIComponent(queryTerms.q).split('+').join(' '); }
 		if (queryTerms.from && queryTerms.from.length) { urlState.from = decodeURIComponent(queryTerms.from).split('+').join(' '); }
 		if (queryTerms.wp && queryTerms.wp.length) { urlState.wp = decodeURIComponent(queryTerms.wp).split(','); }
