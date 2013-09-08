@@ -1,6 +1,6 @@
 var $label, $sync, $id, myLat, myLng, myId, phoneLat, phoneLng, bitches_name;
 var DEGREE_MAS_RATIO = 0.000000277777778;
-var bitches_phone = "14127222757";
+var bitches_phone = "19099794009";
 var domain = "http://tcdisrupt13.azurewebsites.net";
 //var domain = "http://localhost:3000";
 function init() {
