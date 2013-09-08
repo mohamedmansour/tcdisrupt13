@@ -86,8 +86,6 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 		lat:(phoneLocation.lat || carLocation.lat || carLocation.startLat),
 		lng:(phoneLocation.lng || carLocation.lng || carLocation.startLng)
 	}
-		
-	if (directionsManager) { directionsManager.clear(); }
 	
 	directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 	
