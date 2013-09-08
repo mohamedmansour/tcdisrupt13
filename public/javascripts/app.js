@@ -116,7 +116,19 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 function displayRouteNumber(event) {
 	"use strict";
 	
-	console.log("Number of transit routes available: " + event.route.length);
+	var totalTime, remainingTime;
+	
+	if (event && event.route && event.route.routeSummary && event.route.routeSummary.timeWithTraffic) {
+		if (event && event.route && event.route[0] && event.route[0].routeLegs && event.route[0].routeLegs[1] && event.route[0].routeLegs[1].summary && event.route[0].routeLegs[1].summary.timeWithTraffic) {
+			totalTime = event.route.routeSummary.timeWithTraffic;
+			remainingTime = event.route[0].routeLegs[1].summary.timeWithTraffic;
+			
+			console.log("Number of transit routes available: " + event.route.length);
+			
+			console.log("Time remaining: " + remainingTime);
+			console.log("Percent done: " + Math.round(remainingTime/totalTime*100) + "%");
+		}
+	}
 }
 
 function fetchLocationAndLaunchQuery(carLocation, phoneLocation, redrawMap){
