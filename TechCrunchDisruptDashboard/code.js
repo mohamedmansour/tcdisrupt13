@@ -1,5 +1,6 @@
-var $label, $sync, $id, myLat, myLng, myId, phoneLat, phoneLng;
+var $label, $sync, $id, myLat, myLng, myId, phoneLat, phoneLng, bitches_name;
 var DEGREE_MAS_RATIO = 0.000000277777778;
+var bitches_phone = "14127222757";
 function init() {
 	
 	/** Converts numeric degrees to radians */
@@ -14,6 +15,7 @@ function init() {
 	$label = x$("#current-location");
 	$id = x$("#car-id");
 	$sync = x$("#sync-status");
+	$loading-gif = x$("#loading-gif");
 	/*
     var button = document.getElementById('button-test');
     var GMButton = new gm.widgets.Button({
@@ -25,6 +27,26 @@ function init() {
     GMButton.render();
     */
 }
+
+function notifyBitches(message){
+	gm.comm.webServiceRequest(
+		    function(responseObj) {
+		    },
+		    function(responseObj) {
+		    },
+		    {
+		      url: "http://tcdisrupt13.azurewebsites.net/api/notify",
+		      method: "GET",
+		      parameters: 
+		    	  {
+		    	  	"id": myId,
+		    	  	"phone" : bitches_phone,
+		    	  	"message" : message
+		    	  }
+		    }
+	    );
+}
+
 function renderContacts () {
 	var contacts = x$(".contact");
 	for (var i = 0; i < contacts.length; i++)
@@ -59,8 +81,27 @@ function sendLocation(lat, lng, id)
 	    		phoneLng = obj.phoneLng;
 	    		if (phoneLat && phoneLng) {
 	    			var dist = distance(myLat, myLng, phoneLat, phoneLng);
+	    			if (dist < 0.05)
+	    			{
+	    				notifyBitches("Hey " + bitches_name + " it's Route.me, I've arrived!");
+	    				gm.comm.webServiceRequest(
+	    					    function(responseObj) {
+	    					    },
+	    					    function(responseObj) {
+	    					    },
+	    					    {
+	    					      url: "http://tcdisrupt13.azurewebsites.net/api/sync",
+	    					      method: "GET",
+	    					      parameters: 
+	    					    	  {
+	    					    	  	"id": id
+	    					    	  }
+	    					    }
+	    				    );
+	    				gm.info.clearPosition(watchPositionID);
+	    			}
 	    		}
-	    		$sync.html("phone lat: " + phoneLat + "phone lng: " + phoneLng + "distance:" + dist);
+	    		$sync.html("phone lat: " + phoneLat + "<br/>phone lng: " + phoneLng + "<br/>line_distance:" + dist);
 	    	} else {
 	    		$sync.html("FAILED");
 	    		//gm.info.clearPosition(watchPositionID);
@@ -84,7 +125,7 @@ function initiateSync(lat, lng, id) {
 	
 	if (phoneLat && phoneLng) {
 		//debugger;
-		$sync.html("setting dest lat: " + phoneLat/DEGREE_MAS_RATIO + " lng: " + phoneLng/DEGREE_MAS_RATIO);
+		$sync.html("setting dest<br/>car_lat: " + phoneLat/DEGREE_MAS_RATIO + "<br/>car_lng: " + phoneLng/DEGREE_MAS_RATIO);
 		gm.navigation.setDestination(
 			function(responseObj) {
 			    console.log('Success: setDestination.');
@@ -138,6 +179,7 @@ function pollForPhoneLoc()
 			if (phoneLat && phoneLng)
 			{
 				clearInterval(pollIntervalId);
+				notifyBitches("Hey " + bitches_name + " it's Route.me, I'm on my way, you can track me by visiting http://tcdisrupt13.azurewebsites.net/maps?id=" + myId);
 		        initiateSync(myLat, myLng, myId);
 			}
 		},
@@ -145,7 +187,10 @@ function pollForPhoneLoc()
 }
 
 startDemo = function(e){
-	x$('.contact-list')[0].style.display = "none";	
+	bitches_name = e.currentTarget.innerText.trim();
+	x$('.contact-list')[0].style.display = "none";
+	x$('#debugstatus')[0].style.display = "block";	
+
 	
 	
     myId = makeid();
