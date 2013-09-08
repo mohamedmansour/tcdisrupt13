@@ -88,7 +88,7 @@ function createDrivingRoute(carLocation, phoneLocation, autoUpdateMapView) {
 	}
 	
 	if (oldDirectionsManager) {
-		directionsManager.resetDirections();
+		//directionsManager.resetDirections();
 		directionsManager.dispose();
 		directionsManager = null;
 	}
