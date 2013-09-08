@@ -126,7 +126,7 @@ function displayRouteNumber(event) {
 			console.log("Number of transit routes available: " + event.route.length);
 			
 			console.log("Time remaining: " + remainingTime);
-			console.log("Percent done: " + Math.round(remainingTime/totalTime*100) + "%");
+			console.log("Percent done: " + Math.round((1-remainingTime/totalTime)*1000)/10 + "%");
 		}
 	}
 }
