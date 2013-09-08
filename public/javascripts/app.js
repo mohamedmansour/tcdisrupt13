@@ -49,21 +49,18 @@ function initAfterFirstMapLoad() {
 function appActivate() {
 	"use strict";
 	
+	$("header").addClass("active");
+	$("#welcomeScreen").fadeOut(800);
 	$("#theApp").removeClass("obscured");
 }
 
 function appDeactivate() {
 	"use strict";
 
+	$("header").removeClass("active");
+	$("#welcomeScreen").fadeIn(800);
 	$("#theApp").addClass("obscured");
 }
-
-var photoSetRequested = 0;
-var photoSetOnDisplay = 0;
-
-
-var boundingBoxesCache = {};
-
 
 var directionsManager;
 var pins = {A:null, B:null, C:null};
