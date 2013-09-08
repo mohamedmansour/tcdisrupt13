@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>GM Dashboard App</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" href="GMLIB/com.gm.widgets.css" type="text/css"/>
+		<script type="text/javascript" src="GMLIB/com.gm.widgets.js"></script>
+		<script type="text/javascript" src="GMLIB/comm.js"></script>
+		<script type="text/javascript" src="GMLIB/info.js"></script>
+		<script type="text/javascript" src="GMLIB/io.js"></script>
+		<script type="text/javascript" src="GMLIB/media.js"></script>
+		<script type="text/javascript" src="GMLIB/phone.js"></script>
+		<script type="text/javascript" src="GMLIB/system.js"></script>
+		<script type="text/javascript" src="GMLIB/ui.js"></script>
+		<script type="text/javascript" src="GMLIB/util.js"></script>
+		<script type="text/javascript" src="GMLIB/voice.js"></script>
+		<script type="text/javascript" src="codesamples.js"></script>
+		<link rel="stylesheet" href="style.css" type="text/css"/>
+    </head>
+    <body onload="gm.system.init();javascript:init();">
+    
+    <h2>HMI JavaScript API Code Samples Application</h2>
+    
+    <p>
+    	This application demonstrates basic usage of a variety of JavaScript APIs available in the HMI system. Click on a section to expand it. 
+    	More information can be found in the Eclipse Help Documentation (Help -&gt; Help Contents -&gt; GM Developer's Library).
+    </p>
+
+
+
+    <div class="group">
+    	<div class="title">
+    		AUDIO
+    	</div>
+    	<div class="field">
+    		<h3>gm.media.play</h3><div id="audio-play"></div>
+    	</div>
+    	<div class="field">
+			<h3>gm.audio.pause</h3><div id="audio-pause"></div>
+		</div>
+		<div class="field">
+			<h3>gm.media.seek</h3><div id="audio-seek"></div>
+		</div>
+		<div class="field">
+    		<h3>gm.media.stop</h3><div id="audio-stop"></div>
+    	</div>
+    </div>
+    
+    <div class="group">
+    	<div class="title">
+    		PHONE
+    	</div>
+    	<div class="field">
+    		<h3>gm.phone.dialPhoneNumber</h3>
+    		<div id="phone-input"></div>
+    		<div id="phone-button"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.phone.sendTextMessage</h3>
+    		<div id="txt-number"></div>
+    		<div id="txt-value"></div>
+    		<div id="txt-button"></div>
+    	</div>
+    </div>
+
+    <div class="group">
+    	<div class="title">
+    		FILE I/O
+    	</div>
+    	<div class="field">
+    		<h3>gm.io.writeFile</h3>
+    		<div id="file-name-input"></div>
+    		<div id="contents-input"></div>
+    		<div id="file-write-btn"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.io.readFile</h3>
+    		<div id="file-read-input"></div>
+    		<div id="file-read-btn"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.io.deleteFile</h3>
+    		<div id="file-del-input"></div>
+    		<div id="file-del-btn"></div>
+    	</div>
+    </div>
+    
+   	<div class="group">
+    	<div class="title">
+    		NAV
+    	</div>
+    	<div class="field">
+    		<h3>gm.nav.watchDestination</h3>
+    		<div id="watchDest-button"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.nav.clearDestination</h3>
+    		<div id="clearDest-button"></div>
+    	</div>
+    </div>
+    
+    <div class="group">
+    	<div class="title">
+    		VEHICLE INFORMATION
+    	</div>
+    	<div class="field">
+    		<h3>gm.info.getCurrentPosition</h3>
+    		<div id="gps-button"></div>
+    		<div id="gps-output" class="label"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.info.watchPosition</h3>
+    		<div id="watch-gps-button"></div>
+    		<div id="watch-gps-output" class="label"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.info.watchSpeed</h3>
+    		<div id="watch-speed-button"></div>
+    		<div id="watch-speed-output"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.info.getVehicleConfiguration</h3>
+    		<div id="vehicle-config-button"></div>
+    		<div id="vehicle-config-output"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.info.getVehicleData</h3>
+    		<div id="vehicle-data-button"></div>
+    		<div id="vehicle-data-output"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.info.getRadioInfo</h3>
+    		<div id="radio-btn"></div>
+    		<div id="radio-output"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.info.watchProximity</h3>
+    		<div id="prox-button"></div>
+    		<div id="prox-output"></div>
+    	</div>
+    </div>
+    
+    <div class="group">
+    	<div class="title">
+    		UI
+    	</div>
+    	<div class="field">
+    		<h3>gm.ui.setInteractionSelector</h3>
+    		<div id="menu-btn"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.ui.setFavorite</h3>
+    		<div id="fave-button"></div>
+    		<div id="fave-output"></div>
+    	</div>
+    	<div class="field">
+    		<h3>gm.ui.showAlert</h3>
+    		<div id="show-alert-button"></div>
+    		<div id="show-alert-output"></div>
+    	</div>
+    </div>
+    
+    <div class="group">
+    	<div class="title">
+    		VOICE
+    	</div>
+    	<div class="field">
+    		<h3>gm.voice.startTTS</h3>
+    		<div id="speech-input"></div>
+    		<div id="speech-button"></div>
+    	</div>
+    </div>
+    
+    <div class="group">
+    	<div class="title">
+    		VIDEO
+    	</div>
+    	<div class="field">
+    		<h3>gm.media.play</h3>
+    		<div id="video-play"></div>
+    	</div>
+    </div>
+
+    <div class="group">
+                	<div class="title">
+                		WIDGETS
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.Keyboard (standalone)</h3>
+                		<div id="keyboard"></div>
+                	</div>
+
+                	<div class="field">
+                		<h3>gm.widgets.Keyboard (standalone email)</h3>
+                		<div id="keyboardEmail"></div>
+                	</div>
+
+                	<div class="field">
+                		<h3>gm.widgets.Numberpad (standalone)</h3>
+                		<div id="numpadS"></div>
+                	</div>
+
+                	<div class="field">
+                		<h3>gm.widgets.Numberpad (Multiple Fields)</h3>
+                		<div id="numpadMult"></div>
+                		<br>
+                		<div id="numpadDiv">
+                			<label class="inputLabel">Input1</label>
+                			<input><br>
+                			<label class="inputLabel">Input2</label>
+                			<input>
+                		</div>
+                	</div>
+
+                	       <div class="field">
+                		<h3>gm.widgets.Keyboard (Multiple Fields)</h3>
+                		<div id="keyboardMult"></div>
+                		<br>
+                		<div id="keyboardDiv">
+                			<label class="inputLabel">Input1</label>
+                			<input><br>
+                			<label class="inputLabel">Input2</label>
+                			<input>
+                		</div>
+                	</div>
+                	
+          			<div class="field">
+                		<h3>gm.widgets.Checkbox</h3>
+                		<div id="checkboxDiv"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.RadioButon</h3>
+                		<div id="radiobuttonDiv"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.TextField</h3>
+                		<div id="textfieldDiv"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.PasswordField</h3>
+                		<div id="passwordDiv"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.NumberField</h3>
+                		<div id="numberfieldDiv"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.About</h3>
+                		<div id="new-about-widget"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.CloseApp</h3>
+                		<div id="new-closeapp-widget"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.SetFavorite</h3>
+                		<div id="new-setfav-widget"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.TextSpinner</h3>
+                		<div id="new-ts-widget"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.DatePicker</h3>
+                		<div id="new-datepicker-widget"></div>
+                	</div>
+                	<div class="field">
+                		<h3>gm.widgets.TimePicker</h3>
+                		<div id="new-timepicker-widget"></div>
+                	</div>
+              </div>
+
+    
+    </body>
+</html>

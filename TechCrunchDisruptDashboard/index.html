@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>GM Dashboard App</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" href="GMLIB/com.gm.widgets.css" type="text/css"/>
+		<script type="text/javascript" src="GMLIB/com.gm.widgets.js"></script>
+		<script type="text/javascript" src="GMLIB/comm.js"></script>
+		<script type="text/javascript" src="GMLIB/info.js"></script>
+		<script type="text/javascript" src="GMLIB/io.js"></script>
+		<script type="text/javascript" src="GMLIB/media.js"></script>
+		<script type="text/javascript" src="GMLIB/phone.js"></script>
+		<script type="text/javascript" src="GMLIB/system.js"></script>
+		<script type="text/javascript" src="GMLIB/ui.js"></script>
+		<script type="text/javascript" src="GMLIB/util.js"></script>
+		<script type="text/javascript" src="GMLIB/voice.js"></script>
+		<script type="text/javascript" src="codesamples.js"></script>
+		<link rel="stylesheet" href="style.css" type="text/css"/>
+		<link rel="stylesheet" href="style2.css" type="text/css"/>
+    </head>
+    <body onload="gm.system.init();">
+  		<!-- <iframe id="webpane" src="http://letsgo.io" width="100%" height="400px"></iframe> -->
+  		
+  		<div id="showKeyboard"></div>
+  		<script>
+  		//document.getElementById("webpane").height = window.innerHeight + "px";
+  	    
+  		
+  		var keyboardBtn = new gm.widgets.Button({ label: "Show keyboard",
+  	    	callBack: showKeyboardEmail,
+  	        parentElement: document.getElementById('showKeyboard')
+  	    });
+  	    keyboardBtn.render();
+  		
+  	    var showKeyboardEmail = function() {
+	  		var onDoneCallBack = function (data) {
+	  			console.log('onDone called with -> ' + data.value);
+	  		};
+	
+	  		var onCancelCallBack = function () {
+	  			console.log('Canceled!');
+	  		};
+	  		
+	  		var keyboard = new gm.widgets.Keyboard({sender: null, language: "en-US", kbType: 1, feedbackMode: 0, Theme:'gmc', placeholder:'Placeholder', onDone: onDoneCallBack, onCancel:onCancelCallBack});
+  	    }
+  		</script>
+    </body>
+</html>
