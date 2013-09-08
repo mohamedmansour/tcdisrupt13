@@ -131,7 +131,7 @@ function displayRouteNumber(event) {
 			
 			console.log("Time remaining: " + remainingTime);
 			
-			$("#headerBar")[0].innerText = Math.round(remainingTime/60) + "min " + Math.round(remainingTime)%60 + "sec remaining"; appDeactivate();
+			$("#headerBar")[0].innerText = Math.round(remainingTime/60) + " min " + Math.round(remainingTime)%60 + " sec remaining"; appDeactivate();
 			console.log("Percent done: " + Math.round((1-remainingTime/totalTime)*1000)/10 + "%");
 		}
 	}
