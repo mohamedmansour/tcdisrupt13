@@ -118,10 +118,10 @@ function displayRouteNumber(event) {
 	
 	var totalTime, remainingTime;
 	
-	if (event && event.route && event.route.routeSummary && event.route.routeSummary.timeWithTraffic) {
+	if (event && event.route && event.route[0] && event.route[0].routeLegs && event.route[0].routeLegs[0] && event.route[0].routeLegs[0].summary && event.route[0].routeLegs[0].summary.timeWithTraffic) {
 		if (event && event.route && event.route[0] && event.route[0].routeLegs && event.route[0].routeLegs[1] && event.route[0].routeLegs[1].summary && event.route[0].routeLegs[1].summary.timeWithTraffic) {
-			totalTime = event.route.routeSummary.timeWithTraffic;
 			remainingTime = event.route[0].routeLegs[1].summary.timeWithTraffic;
+			totalTime = event.route[0].routeLegs[0].summary.timeWithTraffic + remainingTime;
 			
 			console.log("Number of transit routes available: " + event.route.length);
 			
